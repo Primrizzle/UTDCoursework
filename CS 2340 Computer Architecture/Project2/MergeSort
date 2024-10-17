@@ -1,0 +1,84 @@
+# Name: Ashley Primrose
+# ID: AMP190009
+
+# This program is in MIPS and run using MARS
+
+# This program takes two lists of integers, and utilizing a Merge algorithm, combines them in 
+# ascending order. The program utilizes 1 main loop to load the data from both loops into separate 
+# registers before comparing elements and organizing into secondary loops. 
+
+# The secondary loop checks the elements of both lists and appends them to the head of a third "merged" list. 
+# Finally, the last loop exists to iterate through the merged lists and outputs them in ascending order with 
+# spaces between each element. 
+
+.data
+	listA: 		.word 1, 4, 6, 9 
+	listA_size: 	.word 4
+	listB: 		.word 0, 2, 3, 7
+	listB_size: 	.word 4
+	merged_lists: 	.word 0:8	 # New list for merged lists
+	mergedL_size: 	.word 8
+	sp: 		.asciiz " "
+	newL: 		.asciiz "\n"
+.text 
+main:				# Set up 
+	li $t0, 0		# i = 0
+	li $t1, 0		# j = 0
+	lw $t2, listA_size
+	lw $t3, listB_size
+	la $s0, listA
+	la $s1, listB
+	la $s2, merged_lists
+loop0:
+	lw  $a0, 0($s0)		
+	beq $t0, $t2, loopA	# checks whether i = list A size, loop ends
+	lw  $a1, 0($s1)		
+	beq $t1, $t3, loopA	# checks whether j = list B size, loop ends
+	ble $a0, $a1, joinA	# checks if listA[i] <= listB[j], then goes to join function
+	sw  $a1, 0($s2)		# else, joins listB[j] to merged_lists
+	add $t1, $t1, 1		# j++
+	add $s1, $s1, 4		# goes to next element in listA
+	j next
+joinA:				# Function to join listA[i] to merged_lists and points to next element in listA
+	sw  $a0, 0($s2)		
+	add $t0, $t0, 1		# i++
+	add $s0, $s0, 4		
+next: 				
+	add $s2, $s2, 4		
+	j loop0
+loopA:
+	lw  $a0, 0($s0)		# checks if listA has elements to be added
+	beq $t0, $t2, loopB	# appends to merged_lists
+	add $t0, $t0, 1
+	sw  $a0, 0($s2)
+	add $s0, $s0, 4
+	add $s2, $s2, 4
+	j loopA
+loopB:
+	lw  $a1, 0($s1)		# checks if listB has elements to be added
+	beq $t1, $t3, termLoop	# appends to merged_lists
+	add $t1, $t1, 1
+	sw  $a1, 0($s2)
+	add $s1, $s1, 4
+	add $s2, $s2, 4
+termLoop:
+	li $t0, 0		# k = 0
+	lw $t1, mergedL_size	# $t1 = mergedL_size
+	la $s2, merged_lists
+outLoop:			
+	lw  $a0, 0($s2)		# loads merged_lists[k] into $a0
+	beq $t0, $t1, terminate	# checks if k equals listC size, exits the loop
+	li  $v0, 1		# print merged_lists[k]
+	syscall
+	
+	la $a0, sp		# prints blank space
+	li $v0, 4
+	syscall
+	
+	add $s2, $s2, 4		# next point in merged_lists
+	add $t0, $t0, 1		# k++
+	j outLoop
+terminate:			# terminate program
+	li $v0, 10
+	syscall
+	
