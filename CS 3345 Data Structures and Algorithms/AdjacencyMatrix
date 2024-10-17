@@ -1,0 +1,64 @@
+// Code for an Adjacency Matrix
+
+//
+//  main.cpp
+//  Q2AdjacencyMatrix
+//
+//  Created by Ashley Primrose on 12/9/22.
+//
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+//initiation of class Vertex to create objects of Vertex class
+class Vertex {
+public:
+    int index;
+    char x;
+    int position;
+public:
+    Vertex( int i, int p, char data){ // constructor for position, index, and vertex
+        position = p;
+        index = i;
+        x = data;
+    }
+};
+// initiation of class Edge to create objects of Edge class
+class Edge {
+public:
+    int weight, start, end, position;
+public:
+    Edge( int w, int s, int e, int p){ //constructor for position, index, start, and end of edge
+        weight = w;
+        start = s;
+        end = e;
+        position = p;
+    }
+};
+//initiation of class graph which has functions relevant to undirected graphs without update functions
+class Graph {
+public:
+    vector EdgeList;
+    vector VectorList;
+    Edge* a[3][3];
+    int n;
+    Graph(vector vList, vector eList){
+        int sIndex, eIndex;
+        EdgeList = eList;
+        VectorList = vList;
+        n = vList.size();
+        for(Vector::iterator i = eList.begin(); i != eList.end(); i++ ){
+            sIndex = (*i).start;
+            eIndex = (*i).end;
+            int temp = VectorList[sIndex].index;
+            int temp2 = VectorList[eIndex].index;
+            a[temp][temp2] = &EdgeList[(*i).position];
+        }
+    }
+};
+
+int main(int argc, const char * argv[]) {
+        return 0;
+}
